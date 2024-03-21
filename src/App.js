@@ -116,7 +116,7 @@ function App() {
             Authorization: `Bearer ${token}`,
           },
           params: {
-            limit: limit, // Adjust limit as needed
+            limit: 100, // Adjust limit as needed
             offset: offset
           }
         });
