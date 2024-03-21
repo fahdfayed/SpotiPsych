@@ -101,7 +101,6 @@ function App() {
       setUserProfile(data);
     } catch (error) {
       console.error("Error fetching user profile:", error);
-      // Handle error, e.g., set userProfile to null or display an error message
     }
   };
 
@@ -110,22 +109,23 @@ function App() {
       let offset = 0;
       let limit = 50; // Maximum limit per request
       let tracks = [];
-
-      while (offset < 100) { // Maximum 100 tracks
+  
+      while (offset < 20) { // Maximum 100 tracks
         const { data } = await axios.get("https://api.spotify.com/v1/me/top/tracks", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
           params: {
-            limit: limit,
+            limit: limit, // Adjust limit as needed
             offset: offset
           }
         });
-
-        // Extract track IDs from the response
-        const trackIds = data.items.map(track => track.id);
-
-        // Fetch audio features for the track IDs
+  
+        // Filter out tracks with null IDs
+        const validTracks = data.items.filter(track => track.id);
+  
+        // Fetch audio features for the valid track IDs
+        const trackIds = validTracks.map(track => track.id);
         const { data: audioFeatures } = await axios.get("https://api.spotify.com/v1/audio-features", {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -134,23 +134,32 @@ function App() {
             ids: trackIds.join(',')
           }
         });
-
-        // Combine track data with audio features
-        const tracksWithAudioFeatures = data.items.map(track => {
-          const trackAudioFeatures = audioFeatures.audio_features.find(feature => feature.id === track.id);
-          return { ...track, audio_features: trackAudioFeatures };
+        
+  
+        // Combine valid track data with audio features
+        const tracksWithAudioFeatures = validTracks.map(track => {
+          const trackAudioFeatures = audioFeatures.audio_features.find(feature => feature && feature.id === track.id);
+          const audioFeaturesData = trackAudioFeatures || {
+            danceability: 0,
+            energy: 0,
+            instrumentalness: 0,
+            tempo: 0,
+            mode: 0,
+            valence: 0
+          };
+          return { ...track, audio_features: audioFeaturesData }; // Ensure audio_features is an object
         });
-
+  
         tracks = tracks.concat(tracksWithAudioFeatures);
-
+  
         // If the number of tracks received is less than the limit, it means we've reached the end
         if (data.items.length < limit) {
           break;
         }
-
+  
         offset += limit;
       }
-
+  
       setTopTracks(tracks);
       calculateAverageAudioFeatures(tracks); // Calculate average audio features after getting top tracks
       getUserProfile(); // Fetch user profile after getting top tracks
@@ -159,6 +168,10 @@ function App() {
       // Handle error
     }
   };
+  
+  
+  
+  
 
   const calculateAverageAudioFeatures = (tracks) => {
     const numTracks = tracks.length;
@@ -172,12 +185,14 @@ function App() {
     };
 
     tracks.forEach(track => {
-      totalAudioFeatures.danceability += track.audio_features.danceability;
-      totalAudioFeatures.energy += track.audio_features.energy;
-      totalAudioFeatures.instrumentalness += track.audio_features.instrumentalness;
-      totalAudioFeatures.tempo += track.audio_features.tempo;
-      totalAudioFeatures.mode += track.audio_features.mode;
-      totalAudioFeatures.valence += track.audio_features.valence;
+      if (track.audio_features) {
+        totalAudioFeatures.danceability += track.audio_features.danceability || 0;
+        totalAudioFeatures.energy += track.audio_features.energy || 0;
+        totalAudioFeatures.instrumentalness += track.audio_features.instrumentalness || 0;
+        totalAudioFeatures.tempo += track.audio_features.tempo || 0;
+        totalAudioFeatures.mode += track.audio_features.mode || 0;
+        totalAudioFeatures.valence += track.audio_features.valence || 0;
+      }
     });
 
     const averageAudioFeatures = {
@@ -192,16 +207,13 @@ function App() {
     setAverageAudioFeatures(averageAudioFeatures);
   };
 
- 
-
-  
-
   const renderArtists = () => {
     return (
       <div className="search-results">
         {artists.map((artist) => (
           <div key={artist.id} className="artist-item">
             {token && artist.images.length > 0 && (
+
               <img src={artist.images[0].url} alt={artist.name} className="artist-image" />
             )}
             <div className="artist-details">
