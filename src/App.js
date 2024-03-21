@@ -107,7 +107,7 @@ function App() {
   const getUserTopTracks = async () => {
     try {
       let offset = 0;
-      let limit = 100; // Maximum limit per request
+      let limit = 50; // Maximum limit per request
       let tracks = [];
   
       while (offset < 20) { // Maximum 100 tracks
