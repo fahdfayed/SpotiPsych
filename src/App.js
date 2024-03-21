@@ -5,7 +5,7 @@ import './styles.css'; // Import the CSS file for styles
 function App() {
   const CLIENT_ID = "2748134a2e6a442780c62d3a01704707";
   const CLIENT_SECRET = "7baff294d818424e8bc335337c414b8f";
-  const REDIRECT_URI = "spoti-psych.vercel.app/callback";
+  const REDIRECT_URI = "https://spoti-psych.vercel.app/callback";
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
   const RESPONSE_TYPE = "code";
   const SCOPES = ["user-read-email", "user-read-private", "user-top-read"];
