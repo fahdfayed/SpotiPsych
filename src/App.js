@@ -107,10 +107,10 @@ function App() {
   const getUserTopTracks = async () => {
     try {
       let offset = 0;
-      let limit = 50; // Maximum limit per request
+      let limit = 100; // Maximum limit per request
       let tracks = [];
   
-      while (offset < 20) { // Maximum 100 tracks
+      while (offset < 100) { // Maximum 100 tracks
         const { data } = await axios.get("https://api.spotify.com/v1/me/top/tracks", {
           headers: {
             Authorization: `Bearer ${token}`,
