@@ -291,7 +291,7 @@ function App() {
   return (
     <div className="container">
       <header className="App-header">
-        <h1 className="neon-glow">Maro El Khawal</h1>
+        <h1 className="neon-glow">SpotiPsych</h1>
         {token ? (
           <>
             <form className="search-form" onSubmit={searchArtists}>
