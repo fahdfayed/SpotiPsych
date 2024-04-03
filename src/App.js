@@ -109,15 +109,14 @@ function App() {
       let offset = 0;
       let limit = 50; // Maximum limit per request
       let tracks = [];
-    
   
-      while (offset < 20) { // Maximum 100 tracks
+      while (offset < 100) { // Fetch 100 tracks
         const { data } = await axios.get("https://api.spotify.com/v1/me/top/tracks", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
           params: {
-            limit: limit, // Adjust limit as needed
+            limit: Math.min(limit, 100 - offset), // Ensure limit doesn't exceed remaining tracks
             offset: offset,
             time_range: "long_term"
           }
@@ -136,7 +135,6 @@ function App() {
             ids: trackIds.join(',')
           }
         });
-        
   
         // Combine valid track data with audio features
         const tracksWithAudioFeatures = validTracks.map(track => {
@@ -155,7 +153,7 @@ function App() {
         tracks = tracks.concat(tracksWithAudioFeatures);
   
         // If the number of tracks received is less than the limit, it means we've reached the end
-        if (data.items.length < limit) {
+        if (data.items.length < limit || tracks.length >= 100) {
           break;
         }
   
@@ -170,6 +168,7 @@ function App() {
       // Handle error
     }
   };
+  
   
   
   
