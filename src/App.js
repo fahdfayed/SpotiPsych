@@ -117,7 +117,8 @@ function App() {
           },
           params: {
             limit: limit, // Adjust limit as needed
-            offset: offset
+            offset: offset,
+            time_range: long_term
           }
         });
   
