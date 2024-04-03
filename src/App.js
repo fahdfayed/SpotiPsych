@@ -109,6 +109,7 @@ function App() {
       let offset = 0;
       let limit = 50; // Maximum limit per request
       let tracks = [];
+    
   
       while (offset < 20) { // Maximum 100 tracks
         const { data } = await axios.get("https://api.spotify.com/v1/me/top/tracks", {
@@ -118,7 +119,7 @@ function App() {
           params: {
             limit: limit, // Adjust limit as needed
             offset: offset,
-            time_range: long_term
+            time_range: "long_term"
           }
         });
   
