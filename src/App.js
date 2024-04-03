@@ -251,12 +251,12 @@ function App() {
         {averageAudioFeatures && (
           <div className="average-features-box">
             <h2>Average Audio Features</h2>
-            <div>Danceability: {averageAudioFeatures.danceability}</div>
-            <div>Energy: {averageAudioFeatures.energy}</div>
-            <div>Instrumentalness: {averageAudioFeatures.instrumentalness}</div>
-            <div>Tempo: {averageAudioFeatures.tempo}</div>
-            <div>Mode: {averageAudioFeatures.mode}</div>
-            <div>Valence: {averageAudioFeatures.valence}</div>
+            <div>Danceability: {averageAudioFeatures.danceability.toFixed(5)}</div>
+            <div>Energy: {averageAudioFeatures.energy.toFixed(5)}</div>
+            <div>Instrumentalness: {averageAudioFeatures.instrumentalness.toFixed(5)}</div>
+            <div>Tempo: {averageAudioFeatures.tempo.toFixed(5)}</div>
+            <div>Mode: {averageAudioFeatures.mode.toFixed(5)}</div>
+            <div>Valence: {averageAudioFeatures.valence.toFixed(5)}</div>
           </div>
         )}
   
@@ -274,12 +274,12 @@ function App() {
               <div className="track-album">Album: {track.album.name}</div>
               <div className="track-release-date">Release Date: {track.album.release_date}</div>
               <div className="track-audio-features">
-                <div>Danceability: {track.audio_features.danceability}</div>
-                <div>Energy: {track.audio_features.energy}</div>
-                <div>Instrumentalness: {track.audio_features.instrumentalness}</div>
-                <div>Tempo: {track.audio_features.tempo}</div>
-                <div>Mode: {track.audio_features.mode}</div>
-                <div>Valence: {track.audio_features.valence}</div>
+                <div>Danceability: {track.audio_features.danceability.toFixed(5)}</div>
+                <div>Energy: {track.audio_features.energy.toFixed(5)}</div>
+                <div>Instrumentalness: {track.audio_features.instrumentalness.toFixed(5)}</div>
+                <div>Tempo: {track.audio_features.tempo.toFixed(5)}</div>
+                <div>Mode: {track.audio_features.mode.toFixed(5)}</div>
+                <div>Valence: {track.audio_features.valence.toFixed(5)}</div>
               </div>
             </div>
           </div>
