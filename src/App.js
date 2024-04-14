@@ -104,221 +104,136 @@ function App() {
     }
   };
 
-  const getUserTopTracks = async () => {
-    try {
-      let offset = 0;
-      let limit = 50; // Maximum limit per request
-      let tracks = [];
-  
-      while (offset < 100) { // Fetch 100 tracks
-        const { data } = await axios.get("https://api.spotify.com/v1/me/top/tracks", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            limit: Math.min(limit, 100 - offset), // Ensure limit doesn't exceed remaining tracks
-            offset: offset,
-            time_range: "long_term"
-          }
-        });
-  
-        // Filter out tracks with null IDs
-        const validTracks = data.items.filter(track => track.id);
-  
-        // Fetch audio features for the valid track IDs
-        const trackIds = validTracks.map(track => track.id);
-        const { data: audioFeatures } = await axios.get("https://api.spotify.com/v1/audio-features", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: {
-            ids: trackIds.join(',')
-          }
-        });
-  
-        // Combine valid track data with audio features
-        const tracksWithAudioFeatures = validTracks.map(track => {
-          const trackAudioFeatures = audioFeatures.audio_features.find(feature => feature && feature.id === track.id);
-          const audioFeaturesData = trackAudioFeatures || {
-            danceability: 0,
-            energy: 0,
-            instrumentalness: 0,
-            tempo: 0,
-            mode: 0,
-            valence: 0
-          };
-          return { ...track, audio_features: audioFeaturesData }; // Ensure audio_features is an object
-        });
-  
-        tracks = tracks.concat(tracksWithAudioFeatures);
-  
-        // If the number of tracks received is less than the limit, it means we've reached the end
-        if (data.items.length < limit || tracks.length >= 100) {
-          break;
+// Update the getUserTopTracks function to fetch track popularity
+const getUserTopTracks = async () => {
+  try {
+    let offset = 0;
+    let limit = 50; // Maximum limit per request
+    let tracks = [];
+
+    while (offset < 100) { // Fetch 100 tracks
+      const { data } = await axios.get("https://api.spotify.com/v1/me/top/tracks", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          limit: Math.min(limit, 100 - offset), // Ensure limit doesn't exceed remaining tracks
+          offset: offset,
+          time_range: "long_term"
         }
-  
-        offset += limit;
+      });
+
+      // Fetch track details including popularity
+      const trackDetails = await Promise.all(
+        data.items.map(async (track) => {
+          const response = await axios.get(`https://api.spotify.com/v1/tracks/${track.id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          return response.data;
+        })
+      );
+
+      tracks = tracks.concat(trackDetails);
+
+      // If the number of tracks received is less than the limit, it means we've reached the end
+      if (data.items.length < limit || tracks.length >= 100) {
+        break;
       }
-  
-      setTopTracks(tracks);
-      calculateAverageAudioFeatures(tracks); // Calculate average audio features after getting top tracks
-      getUserProfile(); // Fetch user profile after getting top tracks
-    } catch (error) {
-      console.error("Error fetching top tracks:", error);
-      // Handle error
+
+      offset += limit;
     }
-  };
-  
-  
-  
-  
-  
 
-  const calculateAverageAudioFeatures = (tracks) => {
-    const numTracks = tracks.length;
-    const totalAudioFeatures = {
-      danceability: 0,
-      energy: 0,
-      instrumentalness: 0,
-      tempo: 0,
-      mode: 0,
-      valence: 0
-    };
+    setTopTracks(tracks);
+    calculateAverageAudioFeatures(tracks); // Calculate average audio features and popularity after getting top tracks
+    getUserProfile(); // Fetch user profile after getting top tracks
+  } catch (error) {
+    console.error("Error fetching top tracks:", error);
+    // Handle error
+  }
+};
 
-    tracks.forEach(track => {
-      if (track.audio_features) {
-        totalAudioFeatures.danceability += track.audio_features.danceability || 0;
-        totalAudioFeatures.energy += track.audio_features.energy || 0;
-        totalAudioFeatures.instrumentalness += track.audio_features.instrumentalness || 0;
-        totalAudioFeatures.tempo += track.audio_features.tempo || 0;
-        totalAudioFeatures.mode += track.audio_features.mode || 0;
-        totalAudioFeatures.valence += track.audio_features.valence || 0;
-      }
-    });
-
-    const averageAudioFeatures = {
-      danceability: totalAudioFeatures.danceability / numTracks,
-      energy: totalAudioFeatures.energy / numTracks,
-      instrumentalness: totalAudioFeatures.instrumentalness / numTracks,
-      tempo: totalAudioFeatures.tempo / numTracks,
-      mode: totalAudioFeatures.mode / numTracks,
-      valence: totalAudioFeatures.valence / numTracks
-    };
-
-    setAverageAudioFeatures(averageAudioFeatures);
+// Extend the calculateAverageAudioFeatures function to calculate average popularity
+const calculateAverageAudioFeatures = (tracks) => {
+  const numTracks = tracks.length;
+  const totalAudioFeatures = {
+    danceability: 0,
+    energy: 0,
+    instrumentalness: 0,
+    tempo: 0,
+    mode: 0,
+    valence: 0,
+    popularity: 0, // Add popularity to total
   };
 
-  const renderArtists = () => {
-    return (
-      <div className="search-results">
-        {artists.map((artist) => (
-          <div key={artist.id} className="artist-item">
-            {token && artist.images.length > 0 && (
+  tracks.forEach((track) => {
+    totalAudioFeatures.danceability += track.audio_features.danceability || 0;
+    totalAudioFeatures.energy += track.audio_features.energy || 0;
+    totalAudioFeatures.instrumentalness += track.audio_features.instrumentalness || 0;
+    totalAudioFeatures.tempo += track.audio_features.tempo || 0;
+    totalAudioFeatures.mode += track.audio_features.mode || 0;
+    totalAudioFeatures.valence += track.audio_features.valence || 0;
+    totalAudioFeatures.popularity += track.popularity || 0; // Add popularity to total
+  });
 
-              <img src={artist.images[0].url} alt={artist.name} className="artist-image" />
-            )}
-            <div className="artist-details">
-              {token && <div className="artist-name">{artist.name}</div>}
-              {token && artist.genres.length > 0 && (
-                <div className="artist-genres">Genres: {artist.genres.join(", ")}</div>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+  const averageAudioFeatures = {
+    danceability: totalAudioFeatures.danceability / numTracks,
+    energy: totalAudioFeatures.energy / numTracks,
+    instrumentalness: totalAudioFeatures.instrumentalness / numTracks,
+    tempo: totalAudioFeatures.tempo / numTracks,
+    mode: totalAudioFeatures.mode / numTracks,
+    valence: totalAudioFeatures.valence / numTracks,
+    popularity: totalAudioFeatures.popularity / numTracks, // Calculate average popularity
   };
 
-  const renderProfile = () => {
-    if (!userProfile) return null;
-    return (
-      <div className="user-profile">
-        {token && userProfile.images.length > 0 && (
-          <img src={userProfile.images[0].url} alt="User" className="user-image" />
-        )}
-        <div className="user-details">
-          {token && <div className="display-name">{userProfile.display_name}</div>}
-          {userProfile.country && <div className="country">Country: {userProfile.country}</div>}
-        </div>
-      </div>
-    );
-  };
-  const renderTopTracks = () => {
-    return (
-      <div className="top-tracks">
-        {/* Display average audio features */}
-        {averageAudioFeatures && (
-          <div className="average-features-box">
-            <h2>Average Audio Features</h2>
-            <div>Danceability: {averageAudioFeatures.danceability.toFixed(5)}</div>
-            <div>Energy: {averageAudioFeatures.energy.toFixed(5)}</div>
-            <div>Instrumentalness: {averageAudioFeatures.instrumentalness.toFixed(5)}</div>
-            <div>Tempo: {averageAudioFeatures.tempo.toFixed(5)}</div>
-            <div>Mode: {averageAudioFeatures.mode.toFixed(5)}</div>
-            <div>Valence: {averageAudioFeatures.valence.toFixed(5)}</div>
-          </div>
-        )}
-  
-        {/* Display individual tracks */}
-        {topTracks.map((track) => (
-          <div key={track.id} className="track-card">
-            <div className="track-image-container">
-              <img src={track.album.images[0].url} alt={track.name} className="track-image" />
-            </div>
-            <div className="track-details">
-              <div className="track-name">{track.name}</div>
-              <div className="track-artists">
-                Artists: {track.artists.map((artist) => artist.name).join(", ")}
-              </div>
-              <div className="track-album">Album: {track.album.name}</div>
-              <div className="track-release-date">Release Date: {track.album.release_date}</div>
-              <div className="track-audio-features">
-                <div>Danceability: {track.audio_features.danceability.toFixed(5)}</div>
-                <div>Energy: {track.audio_features.energy.toFixed(5)}</div>
-                <div>Instrumentalness: {track.audio_features.instrumentalness.toFixed(5)}</div>
-                <div>Tempo: {track.audio_features.tempo.toFixed(5)}</div>
-                <div>Mode: {track.audio_features.mode.toFixed(5)}</div>
-                <div>Valence: {track.audio_features.valence.toFixed(5)}</div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
-  
-  
-  
+  setAverageAudioFeatures(averageAudioFeatures);
+};
+
+// Update the renderTopTracks function to display popularity
+const renderTopTracks = () => {
   return (
-    <div className="container">
-      <header className="App-header">
-        <h1 className="neon-glow">SpotiPsych</h1>
-        {token ? (
-          <>
-            <form className="search-form" onSubmit={searchArtists}>
-              <input className="search-input" type="text" onChange={(e) => setSearchKey(e.target.value)} />
-              <button type="submit" className="search-button">Search</button>
-            </form>
-            {/* <button className="get-profile-button" onClick={getUserProfile}>Get Profile</button> */}
-            <button className="get-tracks-button" onClick={getUserTopTracks}>Get Top 100 Tracks</button>
-            {renderProfile()}
-            {renderArtists()}
-            {renderTopTracks()}
-            <button className="logout-button" onClick={logout}>Logout</button>
-          </>
-        ) : (
-          <a
-            href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPES.join(
-              "%20"
-            )}`}
-            className="login-button"
-          >
-            Login to Spotify
-          </a>
-        )}
-      </header>
+    <div className="top-tracks">
+      {/* Display average audio features and popularity */}
+      {averageAudioFeatures && (
+        <div className="average-features-box">
+          <h2>Average Audio Features</h2>
+          <div>Danceability: {averageAudioFeatures.danceability.toFixed(5)}</div>
+          <div>Energy: {averageAudioFeatures.energy.toFixed(5)}</div>
+          <div>Instrumentalness: {averageAudioFeatures.instrumentalness.toFixed(5)}</div>
+          <div>Tempo: {averageAudioFeatures.tempo.toFixed(5)}</div>
+          <div>Mode: {averageAudioFeatures.mode.toFixed(5)}</div>
+          <div>Valence: {averageAudioFeatures.valence.toFixed(5)}</div>
+          <div>Popularity: {averageAudioFeatures.popularity.toFixed(5)}</div> {/* Display average popularity */}
+        </div>
+      )}
+
+      {/* Display individual tracks */}
+      {topTracks.map((track) => (
+        <div key={track.id} className="track-card">
+          <div className="track-image-container">
+            <img src={track.album.images[0].url} alt={track.name} className="track-image" />
+          </div>
+          <div className="track-details">
+            <div className="track-name">{track.name}</div>
+            <div className="track-artists">
+              Artists: {track.artists.map((artist) => artist.name).join(", ")}
+            </div>
+            <div className="track-album">Album: {track.album.name}</div>
+            <div className="track-release-date">Release Date: {track.album.release_date}</div>
+            <div className="track-popularity">Popularity: {track.popularity}</div> {/* Display track popularity */}
+            <div className="track-audio-features">
+              <div>Danceability: {track.audio_features.danceability.toFixed(5)}</div>
+              <div>Energy: {track.audio_features.energy.toFixed(5)}</div>
+              <div>Instrumentalness: {track.audio_features.instrumentalness.toFixed(5)}</div>
+              <div>Tempo: {track.audio_features.tempo.toFixed(5)}</div>
+              <div>Mode: {track.audio_features.mode.toFixed(5)}</div>
+              <div>Valence: {track.audio_features.valence.toFixed(5)}</div>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
+};
 }
-
-export default App
