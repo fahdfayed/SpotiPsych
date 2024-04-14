@@ -3,8 +3,8 @@ import axios from 'axios';
 import './styles.css'; // Import the CSS file for styles
 
 function App() {
-  const CLIENT_ID = "2748134a2e6a442780c62d3a01704707";
-  const CLIENT_SECRET = "7baff294d818424e8bc335337c414b8f";
+  const CLIENT_ID = "9d66ede257664a81b25946cf8cc429a8";
+  const CLIENT_SECRET = "e5255ea8b36d4dcabcc9c7c5906b12d8";
   const REDIRECT_URI = "https://spoti-psych.vercel.app/callback";
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
   const RESPONSE_TYPE = "code";
