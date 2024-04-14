@@ -237,3 +237,4 @@ const renderTopTracks = () => {
   );
 };
 }
+export default App
