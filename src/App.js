@@ -16,9 +16,7 @@ function App() {
   const [topTracks, setTopTracks] = useState([]);
   const [averageAudioFeatures, setAverageAudioFeatures] = useState(null);
   const [tracksFetched, setTracksFetched] = useState(false);
-  const [showAboutUs, setShowAboutUs] = useState(false); // State for showing About Us section
-
-
+  const [showAboutUs, setShowAboutUs] = useState(true); // State to manage "About Us" visibility
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -37,8 +35,6 @@ function App() {
         // Only fetch user profile if token is not empty
         if (storedToken !== "") {
           getUserProfile();
-          setShowAboutUs(false); // Hide "About Us" section after logging in
-
         }
       } else {
         // Redirect user to Spotify login page if not logged in
@@ -152,16 +148,12 @@ function App() {
       calculateAverageAudioFeatures(tracks); // Calculate average audio features after getting top tracks
       getUserProfile(); // Fetch user profile after getting top tracks
       setTracksFetched(true);
+      setShowAboutUs(false); // Hide "About Us" section after top tracks are fetched
     } catch (error) {
       console.error("Error fetching top tracks:", error);
       // Handle error
     }
   };
-  
-  
-  
-  
-  
 
   const calculateAverageAudioFeatures = (tracks) => {
     const numTracks = tracks.length;
@@ -196,27 +188,6 @@ function App() {
 
     setAverageAudioFeatures(averageAudioFeatures);
   };
-
-  // const renderArtists = () => {
-  //   return (
-  //     <div className="search-results">
-  //       {artists.map((artist) => (
-  //         <div key={artist.id} className="artist-item">
-  //           {token && artist.images.length > 0 && (
-
-  //             <img src={artist.images[0].url} alt={artist.name} className="artist-image" />
-  //           )}
-  //           <div className="artist-details">
-  //             {token && <div className="artist-name">{artist.name}</div>}
-  //             {token && artist.genres.length > 0 && (
-  //               <div className="artist-genres">Genres: {artist.genres.join(", ")}</div>
-  //             )}
-  //           </div>
-  //         </div>
-  //       ))}
-  //     </div>
-  //   );
-  // };
 
   const renderProfile = () => {
     if (!userProfile) return null;
@@ -324,4 +295,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
