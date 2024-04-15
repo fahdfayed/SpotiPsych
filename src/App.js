@@ -268,7 +268,7 @@ function App() {
           <div className="about-us-section">
   <h2 className="about-us-title">About Us</h2>
   <p className="about-us-content">
-  This is the second phase of the study. Please press on the button in order to provide access to your Spotify music data. The data and a form link will be presented. Please complete the form by copy-pasting the  <em>values</em>. 
+  This is the second phase of the study. Please press on the button in order to provide access to your Spotify music data. The data and a form link will be presented. Complete the form by copy-pasting the  <em>values</em>. 
   <br />
   <b> Notice: The researcher will not have access to any login information provided.</b>
   </p>
