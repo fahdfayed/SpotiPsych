@@ -184,25 +184,25 @@ body {
     border-color: #090; /* Dark green border color on button hover */
   }
   .form-link {
-    text-align: center; /* Center align the form link */
-    margin-top: 20px; /* Add top margin */
+    margin-top: 20px; /* Add top margin to create space between the form link and the displayed track */
   }
   
   .form-button {
     padding: 12px 24px;
     font-size: 16px;
-    background-color: #090; /* Dark green background color for the button */
-    color: #fff; /* White text color for the button */
-    border: 2px solid #090; /* Dark green border for the button */
-    border-radius: 5px; /* Add border-radius to the button for rounded corners */
+    background-color: #009933;
+    color: #fff;
+    border: 2px solid #009933;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition for hover effect */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
   
   .form-button:hover {
-    background-color: #070; /* Darker green background color on button hover */
-    border-color: #070; /* Darker green border color on button hover */
+    background-color: #007f26;
+    border-color: #007f26;
   }
+  
   
   .logout-button {
     position: absolute; /* Set position absolute for the logout button */
