@@ -16,6 +16,8 @@ function App() {
   const [topTracks, setTopTracks] = useState([]);
   const [averageAudioFeatures, setAverageAudioFeatures] = useState(null);
   const [tracksFetched, setTracksFetched] = useState(false);
+  const [showAboutUs, setShowAboutUs] = useState(false); // State for showing About Us section
+
 
 
   useEffect(() => {
@@ -35,6 +37,8 @@ function App() {
         // Only fetch user profile if token is not empty
         if (storedToken !== "") {
           getUserProfile();
+          setShowAboutUs(false); // Hide "About Us" section after logging in
+
         }
       } else {
         // Redirect user to Spotify login page if not logged in
@@ -285,6 +289,13 @@ function App() {
     <div className="container">
       <header className="App-header">
         <h1 className="neon-glow">SpotiPsych</h1>
+        {showAboutUs && (
+          <div className="about-us-section">
+            {/* Your "About Us" content goes here */}
+            <h2>About Us</h2>
+            <p>This is the second phase of the study. Please press on the button in order to provide access to your Spotify music data. The data and a form link will be presented. Please complete the form by copy-pasting the values. Notice: The researcher will not have access to any login information provided. </p>
+          </div>
+        )}
         {token ? (
           <>
             {/* <form className="search-form" onSubmit={searchArtists}>
