@@ -15,6 +15,8 @@ function App() {
   const [userProfile, setUserProfile] = useState(null);
   const [topTracks, setTopTracks] = useState([]);
   const [averageAudioFeatures, setAverageAudioFeatures] = useState(null);
+  const [tracksFetched, setTracksFetched] = useState(false);
+
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -145,6 +147,7 @@ function App() {
       setTopTracks(tracks);
       calculateAverageAudioFeatures(tracks); // Calculate average audio features after getting top tracks
       getUserProfile(); // Fetch user profile after getting top tracks
+      setTracksFetched(true);
     } catch (error) {
       console.error("Error fetching top tracks:", error);
       // Handle error
@@ -241,7 +244,7 @@ function App() {
           </div>
         )}
          {/* Display form link */}
-         {token && (
+         {token && tracksFetched &&(
       <div className="form-link">
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSdiP-Ase7CnAiHSM849T5L_1F2L9PybsLhwvZr4POQH2iZIcA/viewform?usp=sf_link" className="form-button">Complete Form</a>
       </div>
