@@ -235,12 +235,11 @@ function App() {
           </div>
         )}
          {/* Display form link */}
-         {token && tracksFetched &&(
-      <div className="form-link">
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdiP-Ase7CnAiHSM849T5L_1F2L9PybsLhwvZr4POQH2iZIcA/viewform?usp=sf_link" className="form-button" target="_blank" rel="noopener noreferrer">Complete Form</a>
-      </div>
-       )}
-
+         {token && tracksFetched && (
+          <div className="form-link">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdiP-Ase7CnAiHSM849T5L_1F2L9PybsLhwvZr4POQH2iZIcA/viewform?usp=sf_link" className="form-button" target="_blank" rel="noopener noreferrer">Complete Form</a>
+          </div>
+         )}
   
         {/* Display individual tracks */}
         {topTracks.map((track) => (
@@ -262,6 +261,7 @@ function App() {
                 <div>Tempo: {track.audio_features.tempo.toFixed(5)}</div>
                 <div>Mode: {track.audio_features.mode.toFixed(5)}</div>
                 <div>Valence: {track.audio_features.valence.toFixed(5)}</div>
+                <div>Popularity: {track.popularity}</div> {/* Render popularity */}
               </div>
             </div>
           </div>
@@ -269,6 +269,7 @@ function App() {
       </div>
     );
   };
+  
   
   
   
