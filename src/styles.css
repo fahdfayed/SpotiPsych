@@ -89,6 +89,7 @@ body {
     border-radius: 10px; /* Add border-radius for rounded corners */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow for elevation effect */
     margin-top: 20px; /* Add margin on top of the section */
+    margin-bottom: 20px;
   }
   
   .about-us-title {
