@@ -284,7 +284,7 @@ function App() {
             {/* <button className="get-profile-button" onClick={getUserProfile}>Get Profile</button> */}
             <button className="get-tracks-button" onClick={getUserTopTracks}>Get Top 100 Tracks</button>
             {renderProfile()}
-            {renderArtists()}
+          
             {renderTopTracks()}
             <button className="logout-button" onClick={logout}>Logout</button>
           </>
