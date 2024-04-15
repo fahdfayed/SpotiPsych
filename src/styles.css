@@ -84,7 +84,7 @@ body {
     position: relative; /* Position the title relative to its container */
   }
   .about-us-section {
-    background-color: #fff; /* White background color for the about us section */
+    background-color: #222; /* White background color for the about us section */
     padding: 40px; /* Add padding inside the section */
     border-radius: 10px; /* Add border-radius for rounded corners */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add box shadow for elevation effect */
