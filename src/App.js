@@ -68,6 +68,10 @@ function App() {
     }
   };
 
+  const hideAboutUs = () => {
+    setShowAboutUs(false);
+  };
+  
   const logout = () => {
     setToken("");
     window.localStorage.removeItem("token");
@@ -262,11 +266,12 @@ function App() {
         <h1 className="neon-glow">SpotiPsych</h1>
         {showAboutUs && (
           <div className="about-us-section">
-            {/* Your "About Us" content goes here */}
-            <h2>About Us</h2>
-            <p>This is the second phase of the study. Please press on the button in order to provide access to your Spotify music data. The data and a form link will be presented. Please complete the form by copy-pasting the values. Notice: The researcher will not have access to any login information provided. </p>
-          </div>
-        )}
+  <h2 className="about-us-title">About Us</h2>
+  <p className="about-us-content">
+  This is the second phase of the study. Please press on the button in order to provide access to your Spotify music data. The data and a form link will be presented. Please complete the form by copy-pasting the values. Notice: The researcher will not have access to any login information provided.
+  </p>
+</div>
+      )}
         {token ? (
           <>
             {/* <form className="search-form" onSubmit={searchArtists}>
