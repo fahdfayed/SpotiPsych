@@ -91,6 +91,9 @@ body {
     margin-top: 20px; /* Add margin on top of the section */
     margin-bottom: 30px;
   }
+  .about-us-content em {
+    font-style: italic; /* Apply italic style to <em> tags inside .about-us-content */
+  }
   
   .about-us-title {
     font-size: 24px; /* Font size for the title */
