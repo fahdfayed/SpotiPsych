@@ -204,6 +204,8 @@ body {
   .get-tracks-button {
     padding: 12px 24px;
     font-size: 16px;
+    text-align: center;
+    
     background-color: #090; /* Dark green background color for the button */
     color: #fff; /* White text color for the button */
     border: 2px solid #090; /* Dark green border for the button */
