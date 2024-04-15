@@ -185,6 +185,7 @@ body {
   }
   .form-link {
     margin-top: 20px; /* Add margin on top to create space */
+    margin-bottom: 20px;
   }
   
   .form-button {
