@@ -184,8 +184,8 @@ body {
     border-color: #090; /* Dark green border color on button hover */
   }
   .form-link {
-    margin-top: 20px; /* Add margin on top to create space */
-    margin-bottom: 20px;
+    margin-top: 30px; /* Add margin on top to create space */
+    margin-bottom: 30px;
   }
   
   .form-button {

@@ -241,9 +241,11 @@ function App() {
           </div>
         )}
          {/* Display form link */}
+         {token && (
       <div className="form-link">
         <a href="https://docs.google.com/forms/d/e/1FAIpQLSdiP-Ase7CnAiHSM849T5L_1F2L9PybsLhwvZr4POQH2iZIcA/viewform?usp=sf_link" className="form-button">Complete Form</a>
       </div>
+       )}
 
   
         {/* Display individual tracks */}
