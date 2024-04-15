@@ -266,7 +266,7 @@ function App() {
         <h1 className="neon-glow">SpotiPsych</h1>
         {showAboutUs && (
           <div className="about-us-section">
-  <h2 className="about-us-title">About Us</h2>
+  <h2 className="about-us-title">Step 2/3</h2>
   <p className="about-us-content">
   This is the second phase of the study. Please press on the button in order to provide access to your Spotify music data. The data and a form link will be presented. Complete the form by copy-pasting the  <em>values</em>. 
   <br />
