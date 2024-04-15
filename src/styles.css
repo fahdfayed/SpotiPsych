@@ -205,6 +205,8 @@ body {
     padding: 12px 24px;
     font-size: 16px;
     text-align: center;
+    display: block;
+    margin: 0 auto;
     
     background-color: #090; /* Dark green background color for the button */
     color: #fff; /* White text color for the button */
