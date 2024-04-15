@@ -11,7 +11,6 @@ function App() {
   const SCOPES = ["user-read-email", "user-read-private", "user-top-read"];
 
   const [token, setToken] = useState("");
-  const [searchKey, setSearchKey] = useState("");
   const [artists, setArtists] = useState([]);
   const [userProfile, setUserProfile] = useState(null);
   const [topTracks, setTopTracks] = useState([]);
@@ -73,23 +72,6 @@ function App() {
     window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPES.join("%20")}`;
   };
 
-  const searchArtists = async (e) => {
-    e.preventDefault();
-    try {
-      const { data } = await axios.get("https://api.spotify.com/v1/search", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          q: searchKey,
-          type: "artist",
-        },
-      });
-      setArtists(data.artists.items);
-    } catch (error) {
-      console.error("Error searching artists:", error);
-    }
-  };
 
   const getUserProfile = async () => {
     try {
@@ -208,26 +190,26 @@ function App() {
     setAverageAudioFeatures(averageAudioFeatures);
   };
 
-  const renderArtists = () => {
-    return (
-      <div className="search-results">
-        {artists.map((artist) => (
-          <div key={artist.id} className="artist-item">
-            {token && artist.images.length > 0 && (
+  // const renderArtists = () => {
+  //   return (
+  //     <div className="search-results">
+  //       {artists.map((artist) => (
+  //         <div key={artist.id} className="artist-item">
+  //           {token && artist.images.length > 0 && (
 
-              <img src={artist.images[0].url} alt={artist.name} className="artist-image" />
-            )}
-            <div className="artist-details">
-              {token && <div className="artist-name">{artist.name}</div>}
-              {token && artist.genres.length > 0 && (
-                <div className="artist-genres">Genres: {artist.genres.join(", ")}</div>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
+  //             <img src={artist.images[0].url} alt={artist.name} className="artist-image" />
+  //           )}
+  //           <div className="artist-details">
+  //             {token && <div className="artist-name">{artist.name}</div>}
+  //             {token && artist.genres.length > 0 && (
+  //               <div className="artist-genres">Genres: {artist.genres.join(", ")}</div>
+  //             )}
+  //           </div>
+  //         </div>
+  //       ))}
+  //     </div>
+  //   );
+  // };
 
   const renderProfile = () => {
     if (!userProfile) return null;
@@ -295,10 +277,10 @@ function App() {
         <h1 className="neon-glow">SpotiPsych</h1>
         {token ? (
           <>
-            <form className="search-form" onSubmit={searchArtists}>
+            {/* <form className="search-form" onSubmit={searchArtists}>
               <input className="search-input" type="text" onChange={(e) => setSearchKey(e.target.value)} />
               <button type="submit" className="search-button">Search</button>
-            </form>
+            </form> */}
             {/* <button className="get-profile-button" onClick={getUserProfile}>Get Profile</button> */}
             <button className="get-tracks-button" onClick={getUserTopTracks}>Get Top 100 Tracks</button>
             {renderProfile()}
