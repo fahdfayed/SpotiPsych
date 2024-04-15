@@ -179,10 +179,11 @@ function App() {
       instrumentalness: 0,
       tempo: 0,
       mode: 0,
-      valence: 0
+      valence: 0,
+      popularity: 0,
     };
-
-    tracks.forEach(track => {
+  
+    tracks.forEach((track) => {
       if (track.audio_features) {
         totalAudioFeatures.danceability += track.audio_features.danceability || 0;
         totalAudioFeatures.energy += track.audio_features.energy || 0;
@@ -190,21 +191,22 @@ function App() {
         totalAudioFeatures.tempo += track.audio_features.tempo || 0;
         totalAudioFeatures.mode += track.audio_features.mode || 0;
         totalAudioFeatures.valence += track.audio_features.valence || 0;
+        totalAudioFeatures.popularity += track.popularity || 0;
       }
     });
-
+  
     const averageAudioFeatures = {
       danceability: totalAudioFeatures.danceability / numTracks,
       energy: totalAudioFeatures.energy / numTracks,
       instrumentalness: totalAudioFeatures.instrumentalness / numTracks,
       tempo: totalAudioFeatures.tempo / numTracks,
       mode: totalAudioFeatures.mode / numTracks,
-      valence: totalAudioFeatures.valence / numTracks
+      valence: totalAudioFeatures.valence / numTracks,
+      popularity: totalAudioFeatures.popularity / numTracks,
     };
-
+  
     setAverageAudioFeatures(averageAudioFeatures);
   };
-
   const renderProfile = () => {
     if (!userProfile) return null;
     return (
@@ -232,14 +234,15 @@ function App() {
             <div>Tempo: {averageAudioFeatures.tempo.toFixed(5)}</div>
             <div>Mode: {averageAudioFeatures.mode.toFixed(5)}</div>
             <div>Valence: {averageAudioFeatures.valence.toFixed(5)}</div>
+            <div>Popularity: {averageAudioFeatures.popularity.toFixed(5)}</div> {/* Render average popularity */}
           </div>
         )}
-         {/* Display form link */}
-         {token && tracksFetched && (
+        {/* Display form link */}
+        {token && tracksFetched && (
           <div className="form-link">
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSdiP-Ase7CnAiHSM849T5L_1F2L9PybsLhwvZr4POQH2iZIcA/viewform?usp=sf_link" className="form-button" target="_blank" rel="noopener noreferrer">Complete Form</a>
           </div>
-         )}
+        )}
   
         {/* Display individual tracks */}
         {topTracks.map((track) => (
