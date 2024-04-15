@@ -110,9 +110,21 @@ function App() {
           }
         });
   
-        // Fetch track details including popularity
-        const trackIds = data.items.map(track => track.id);
-        const { data: detailedTracks } = await axios.get("https://api.spotify.com/v1/tracks", {
+        // Filter out tracks with null IDs
+        const validTracks = data.items.filter(track => track.id);
+  
+        // Fetch audio features and popularity for the valid track IDs
+        const trackIds = validTracks.map(track => track.id);
+        const { data: audioFeatures } = await axios.get("https://api.spotify.com/v1/audio-features", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            ids: trackIds.join(',')
+          }
+        });
+        
+        const { data: trackDetails } = await axios.get("https://api.spotify.com/v1/tracks", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -121,7 +133,23 @@ function App() {
           }
         });
   
-        tracks = tracks.concat(detailedTracks.tracks);
+        // Combine valid track data with audio features and popularity
+        const tracksWithAudioFeatures = validTracks.map(track => {
+          const trackAudioFeatures = audioFeatures.audio_features.find(feature => feature && feature.id === track.id);
+          const trackPopularity = trackDetails.tracks.find(detail => detail && detail.id === track.id);
+          const audioFeaturesData = trackAudioFeatures || {
+            danceability: 0,
+            energy: 0,
+            instrumentalness: 0,
+            tempo: 0,
+            mode: 0,
+            valence: 0
+          };
+          const popularityData = trackPopularity ? trackPopularity.popularity : 0;
+          return { ...track, audio_features: audioFeaturesData, popularity: popularityData }; // Ensure audio_features is an object
+        });
+  
+        tracks = tracks.concat(tracksWithAudioFeatures);
   
         // If the number of tracks received is less than the limit, it means we've reached the end
         if (data.items.length < limit || tracks.length >= 100) {
@@ -206,12 +234,13 @@ function App() {
             <div>Valence: {averageAudioFeatures.valence.toFixed(5)}</div>
           </div>
         )}
-        {/* Display form link */}
-        {token && tracksFetched && (
-          <div className="form-link">
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdiP-Ase7CnAiHSM849T5L_1F2L9PybsLhwvZr4POQH2iZIcA/viewform?usp=sf_link" className="form-button" target="_blank" rel="noopener noreferrer">Complete Form</a>
-          </div>
-        )}
+         {/* Display form link */}
+         {token && tracksFetched &&(
+      <div className="form-link">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdiP-Ase7CnAiHSM849T5L_1F2L9PybsLhwvZr4POQH2iZIcA/viewform?usp=sf_link" className="form-button" target="_blank" rel="noopener noreferrer">Complete Form</a>
+      </div>
+       )}
+
   
         {/* Display individual tracks */}
         {topTracks.map((track) => (
@@ -226,7 +255,6 @@ function App() {
               </div>
               <div className="track-album">Album: {track.album.name}</div>
               <div className="track-release-date">Release Date: {track.album.release_date}</div>
-              <div className="track-popularity">Popularity: {track.popularity}</div> {/* Display track popularity */}
               <div className="track-audio-features">
                 <div>Danceability: {track.audio_features.danceability.toFixed(5)}</div>
                 <div>Energy: {track.audio_features.energy.toFixed(5)}</div>
@@ -241,7 +269,6 @@ function App() {
       </div>
     );
   };
-  
   
   
   
