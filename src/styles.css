@@ -184,24 +184,25 @@ body {
     border-color: #090; /* Dark green border color on button hover */
   }
   .form-link {
-    margin-top: 20px; /* Add top margin to create space between the form link and the displayed track */
+    margin-top: 20px; /* Add margin on top to create space */
   }
   
   .form-button {
     padding: 12px 24px;
     font-size: 16px;
-    background-color: #009933;
-    color: #fff;
-    border: 2px solid #009933;
-    border-radius: 5px;
+    background-color: #009933; /* Darker green background color for the button */
+    color: #fff; /* White text color for the button */
+    border: 2px solid #009933; /* Darker green border for the button */
+    border-radius: 5px; /* Add border-radius to the button for rounded corners */
     cursor: pointer;
     transition: background-color 0.3s ease, border-color 0.3s ease;
   }
   
   .form-button:hover {
-    background-color: #007f26;
-    border-color: #007f26;
+    background-color: #007f26; /* Darker shade of green background color on button hover */
+    border-color: #007f26; /* Darker shade of green border color on button hover */
   }
+  
   
   
   .logout-button {
