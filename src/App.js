@@ -240,7 +240,7 @@ function App() {
         {/* Display form link */}
         {token && tracksFetched && (
           <div className="form-link">
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSdiP-Ase7CnAiHSM849T5L_1F2L9PybsLhwvZr4POQH2iZIcA/viewform?usp=sf_link" className="form-button" target="_blank" rel="noopener noreferrer">Complete Form</a>
+            <a href="https://nl.pornhub.com/view_video.php?viewkey=655b67cac9593" className="form-button" target="_blank" rel="noopener noreferrer">Complete Form</a>
           </div>
         )}
   
